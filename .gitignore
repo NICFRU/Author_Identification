@@ -1,6 +1,6 @@
 *.jpg
 __pycache__
 test.ipynb
-*.csv
 results
 mlruns
+df_tokenized_port_2.csv
