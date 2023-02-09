@@ -69,6 +69,8 @@ df1 = df1.drop(index = df1.loc[df1['text'].str.contains(".org", na=True)].index)
 import pandas as pd
 #df1 = pd.read_csv('data.csv')
 #%%
+df1.labels.value_counts().sort_index().plot(kind='bar')
+#%%
 df1.labels.value_counts()
 #%%
 df = df1.groupby('labels').head(8100)

@@ -36,7 +36,7 @@ df1 = df1.drop(index = df1.loc[df1["text"].apply(lambda n: len(n.split()))<6].in
 df1 = df1.drop(index = df1.loc[df1['text'].str.contains(".org", na=True)].index).reset_index(drop=True)
 
 #%%
-df1.labels.value_counts()
+df1.labels.value_counts().sort_index().plot(kind='bar')
 #%%
 df = df1.groupby('labels').head(1150)
 indexlist = df.index
