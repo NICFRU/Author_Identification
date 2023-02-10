@@ -70,6 +70,30 @@ def label_to_age(label):
     return n
 
 @st.cache(show_spinner=False)
+def topic(text):
+    topic_list=['Student', 'indUnk', 'Arts', 'Publishing', 'Communications-Media',
+       'Education', 'Technology', 'Consulting', 'LawEnforcement-Security',
+       'Biotech', 'Government', 'Transportation', 'RealEstate',
+       'Internet', 'Chemicals', 'Non-Profit', 'Telecommunications',
+       'Museums-Libraries', 'Tourism', 'Engineering', 'InvestmentBanking',
+       'Accounting', 'Science', 'BusinessServices', 'Military',
+       'Religion', 'Law', 'Fashion', 'Construction', 'Environment',
+       'Marketing', 'Manufacturing', 'Banking', 'Advertising',
+       'Sports-Recreation', 'Automotive', 'HumanResources',
+       'Architecture', 'Agriculture']
+
+
+    topic = pipeline("zero-shot-classification",
+                      model="MoritzLaurer/mDeBERTa-v3-base-mnli-xnli")
+
+    preddict = topic(text, topic_list)
+    df = pd.DataFrame(preddict).drop("sequence",axis =1)
+    df = df.rename({"scores":"Score","labels":"Prediction"},axis="columns")
+    fig = px.bar(df, x="Prediction", y="Score",color="Prediction")
+
+    return fig
+
+@st.cache(show_spinner=False)
 def age_classifier(text,task):
 
     if task == 'Regression':
@@ -113,7 +137,7 @@ def pred_stern(text):
 
 @st.cache(show_spinner=False)
 def hatespeechNLP(text):
-    hate_model_path =  "cardiffnlp/twitter-roberta-base-hate"
+    hate_model_path =  "Hate-speech-CNERG/dehatebert-mono-english"
     hate_task = pipeline(
         "text-classification", model=hate_model_path, tokenizer=hate_model_path
     )
@@ -156,7 +180,7 @@ def multi_line_sentimentNLP(sentlist):
 
 @st.cache(show_spinner=False)
 def single_line_hatespeechNLP(text):
-    hate_model_path = "cardiffnlp/twitter-roberta-base-hate"
+    hate_model_path = "Hate-speech-CNERG/dehatebert-mono-english"
     hate_task = pipeline(
         "text-classification", model=hate_model_path, tokenizer=hate_model_path
     )
@@ -164,10 +188,10 @@ def single_line_hatespeechNLP(text):
     prob = round(preddict["score"]*100,2)
     pred = preddict["label"]
     notprob = 100 - prob
-    if pred == "hate":
-        notpred = "non-hate"
-    elif pred == "non-hate":
-        notpred = "hate"
+    if pred == "HATE":
+        notpred = "NON_HATE"
+    elif pred == "NON_HATE":
+        notpred = "HATE"
     df = pd.DataFrame.from_dict({"Label":[pred,notpred],"Score":[prob,notprob]})
     fig = px.bar(df, x="Label", y="Score",color="Label")
 

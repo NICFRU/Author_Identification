@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from classification import text_splitter,pred_gender,pred_stern, age_classifier, multi_line_hatespeechNLP, multi_line_sentimentNLP,single_line_hatespeechNLP,single_line_sentimentNLP
+from classification import text_splitter,topic, pred_gender,pred_stern, age_classifier, multi_line_hatespeechNLP, multi_line_sentimentNLP,single_line_hatespeechNLP,single_line_sentimentNLP
 from streamlit_toggle import st_toggle_switch
 import streamlit as st
 
@@ -38,8 +38,10 @@ def show_predict_page():
         
 
     with colum2:
+        topicclass = st.checkbox('Topic Vorhersage')
         gender = st.checkbox('Gender Vorhersage')
         sternzeichen = st.checkbox('Sternzeichen Vorhersage')
+        
 
 
     with colum3:
@@ -64,11 +66,11 @@ def show_predict_page():
             if task == 'Regression':
                 st.subheader(
                 """
-                Age Klassifzierung mit der Sklearn Pipeline und Regression:
+                Age Regression mit der Sklearn Pipeline und Regression:
                 """
                 )
 
-                with st.spinner('Age Klassfizierung wird durchgeführt...'):
+                with st.spinner('Age Regression wird durchgeführt...'):
                     age = age_classifier(txt,task)
 
                 st.write(f"Der Autor dieses Textes ist {age} Jahre alt.")
@@ -84,7 +86,7 @@ def show_predict_page():
                     """
                     )
 
-                    with st.spinner('Age Klassfizierung wird durchgeführt...'):
+                    with st.spinner('Age Klassifizierung wird durchgeführt...'):
                         age = age_classifier(txt,pipe)
 
                     st.write(f"Der Autor dieses Textes ist {age} Jahre alt.")
@@ -96,7 +98,7 @@ def show_predict_page():
                     """
                     )
 
-                    with st.spinner('Age Klassfizierung wird durchgeführt...'):
+                    with st.spinner('Age Klassifizierung wird durchgeführt...'):
                         age = age_classifier(txt,pipe)
 
                     st.write(f"Der Autor dieses Textes ist {age} Jahre alt.")
@@ -106,13 +108,14 @@ def show_predict_page():
                     pass
 
 
+
         if gender == True:
             st.subheader(
             """
             Gender Klassifzierung mit der Sklearn Pipeline und Klassifikation:
             """
             )
-            with st.spinner('Gender Klassfizierung wird durchgeführt...'):
+            with st.spinner('Gender Klassifizierung wird durchgeführt...'):
                 gen = pred_gender(txt)
             st.write(f"Der Autor dieses Textes hat das Geschlecht {gen}.")
 
@@ -123,16 +126,27 @@ def show_predict_page():
             Sternzeicheen Klassifzierung mit der Sklearn Pipeline und Klassifikation:
             """
             )
-            with st.spinner('Sternzeichen Klassfizierung wird durchgeführt...'):
+            with st.spinner('Sternzeichen Klassifizierung wird durchgeführt...'):
                 sign = pred_stern(txt)
             st.write(f"Der Autor dieses Textes hat das Sternzeichen {sign}.")
+
+        if topicclass == True:
+            st.subheader(
+            """
+            Topic Klassifzierung mit dem MoritzLaurer/mDeBERTa-v3-base-mnli-xnli Modell:
+            """
+            )
+            with st.spinner('Topic Klassifzierung wird durchgeführt...'):
+                topic_plot = topic(txt)
+            st.plotly_chart(topic_plot)
 
         if multiline == 'Singleline':
             if hatespeechbox == True:
                 st.subheader(
                 """
-                Hate Speech Erkennung mit dem Hate-speech-CNERG/dehatebert-mono-german Modell:
+                Hate Speech Erkennung mit dem Hate-speech-CNERG/dehatebert-mono-english Modell:
                 """
+                
                 )
 
                 with st.spinner('Hate Speech Erkennung wird durchgeführt...'):
@@ -161,7 +175,7 @@ def show_predict_page():
             if hatespeechbox == True:
                 st.subheader(
                 """
-                Multi Text Hate Speech Erkennung mit dem Hate-speech-CNERG/dehatebert-mono-german Modell:
+                Multi Text Hate Speech Erkennung mit dem Hate-speech-CNERG/dehatebert-mono-english Modell:
                 """
                 )
                 with st.spinner('Hate Speech Erkennung wird durchgeführt...'):
