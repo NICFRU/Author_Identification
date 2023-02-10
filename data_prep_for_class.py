@@ -2,6 +2,8 @@
 import pandas as pd
 # %%
 df1 = pd.read_csv("df_tokenized_port_2.csv")
+#%%
+df1
 # %%
 df1 = df1.drop(columns=['Unnamed: 0', 'id', 'gender', 'topic', 'sign', 'date', 'text',
        'lang', 'language_2', 'word_tokenize', 'count_word',
